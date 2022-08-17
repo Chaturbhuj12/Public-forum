@@ -1,0 +1,34 @@
+<%- include("partials/indexheader"); -%>
+
+
+
+
+
+<div class="login">
+
+    <h1>
+      Login
+    </h1>
+    <form action="/login" method="post">
+      <div class="form-group">
+        <label>Username</label>
+        <input class="form-control" type="text" name="userid">
+        <label>Password</label>
+        <input class="form-control" type="password" name="password">
+      </div>
+      <div class="btn-login">
+      <button class="btn btn-primary" type="submit" name="button">Submit</button>
+      </div>
+    </form>
+
+    <form class="" action="/signup" method="get">
+      <div class="btn-login">
+        <p>A new user? <button class="login-signup" type="submit" name="button">Sign up</button> now.</p>
+      </div>
+    </form>
+  </div>
+
+
+
+
+<%- include("partials/footer"); -%>

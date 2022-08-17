@@ -1,0 +1,111 @@
+
+<%- include("partials/header"); -%>
+
+
+
+
+  <form class="searchBox">
+  
+  <input style="border-radius: none;" class="searchBar" type="text" id="filterInput">
+  <input type="reset" value="search" id="subscribe">
+  
+
+  
+
+</form>
+
+
+<h1 style="text-align: center;">Welcome <%= name%>!!</h1>
+  <p style="font-size: 20px; font-weight: 500; font-style: italic; text-align: center;"><br>'Find it' is an application where you can search for any topic and find articles written by other authors. Type whatever you want and get information about it! </p>
+
+
+
+
+<% var prevTitle=""%>
+   <%  posts.forEach(function(post){ %>
+   <% if(post.title===prevTitle){%>
+    <h1 style="font-size: 0;"; class="check"> <%=post.title%></h1>
+    <%}else{%>
+    <h1 class="check"><%=post.title%></h1>
+    <%prevTitle=  post.title %>
+    <%}%>
+    <h3 class="erase" style="font-style: oblique; color:rgba(0,0,255,0.55);">    -by <%=post.author%></h2>
+    <p class="eras">
+    <%=post.content.substring(0, 100) + " ..."%>
+    <a href="/home/posts/<%=post._id%>">Read More</a>
+    </p>
+    <div style="font-size: 25px; align-self: auto;" class="era">
+    <button class="like"  onclick="incrementLikeCount('<%=post._id%>')"><a ><i class="glyphicon glyphicon-thumbs-up" ></i></a></button> <span style="padding-right: 20px;" id="like_<%=post._id%>"><%= post.likes%></span> 
+    <button class="dislike"onclick="incrementdisLikeCount('<%=post._id%>')" ><a ><i class="glyphicon glyphicon-thumbs-down" "></i></a> </button><span id="dislike_<%=post._id%>"><%= post.dislikes%></span> 
+    </div>
+
+    <% }) %> 
+<form class="add" action="/home/compose" method="get">
+  <button type="submit" class="botn">+ Add Article</button>
+</form>
+
+<%- include("partials/footer"); -%>
+<script>
+  let filterInput=document.getElementById('filterInput')
+  filterInput.addEventListener('keyup',filterNames)
+  filterInput.addEventListener('keydown',filterNames)
+  function filterNames(){
+    let filterValue=document.getElementById('filterInput').value.toUpperCase()
+    console.log(filterValue)
+    let p=document.getElementsByClassName('eras')
+    let au=document.getElementsByClassName('erase')
+    let h=document.getElementsByClassName('check')
+    let e=document.getElementsByClassName('era')
+    for(let i=0;i<h.length;i++)
+    {
+      
+      if(h[i].textContent.toUpperCase().indexOf(filterValue)>-1)
+      {
+        p[i].style.display=''
+        au[i].style.display=''
+          h[i].style.display=''
+          e[i].style.display=''
+      }
+      else
+      {
+          p[i].style.display='none'
+          au[i].style.display='none'
+          h[i].style.display='none'
+          e[i].style.display='none'
+      }
+    }
+  }
+  
+  
+
+  function incrementLikeCount(postid) {
+  var xhttp;
+  var params = 'postId='+postid;    
+  xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      //alert(this.responseText);
+      var likes = parseInt(document.getElementById('like_'+postid).innerHTML)
+      document.getElementById('like_'+postid).innerHTML = likes+1;
+    }
+  };
+  xhttp.open("POST", "/home/post/like", true);
+  xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+  xhttp.send(params);
+}
+function incrementdisLikeCount(postid) {
+  var xhttp;
+  var params = 'postId='+postid;    
+  xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      //alert(this.responseText);
+      var likes = parseInt(document.getElementById('dislike_'+postid).innerHTML)
+      document.getElementById('dislike_'+postid).innerHTML = likes+1;
+    }
+  };
+  xhttp.open("POST", "/home/post/dislike", true);
+  xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+  xhttp.send(params);
+}
+</script>
